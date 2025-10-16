@@ -1,6 +1,8 @@
 <?php
 
-$db = mysqli_connect('localhost', 'root', '', '');
+$db = mysqli_connect('localhost', 'root', 'root', '');
+//$db = mysqli_connect('db5018820364.hosting-data.io', 'dbu4255947', 'Eduardo5568265*/2025', '');
+
 
 
 if (!$db) {
