@@ -1,0 +1,19 @@
+{
+    "name": "luis.munoz/app",
+    "description": "App de pruebas",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "LuisMunoz\\App\\": "src/",
+            "MVC\\": "./",
+            "Model\\": "./models/",
+            "Controller\\": "./controllers/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Luis Muñoz"
+        }
+    ],
+    "require": {}
+}
