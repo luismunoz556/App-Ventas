@@ -2,6 +2,6 @@
 @use 'base/mixins' as m;
 
 .boton {
-    @include m.boton(v.$verde, v.$blanco);
+    @include m.boton(v.$azul, v.$blanco);
     border-radius: 1rem;
 }
