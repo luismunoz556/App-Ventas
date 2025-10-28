@@ -41,4 +41,48 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.log('No se encontraron los elementos del menú móvil');
     }
+    
+    // Inicializar funcionalidades de productos si existen
+    inicializarProductos();
 });
+
+// Funciones de gestión de productos
+function eliminarProducto(id, nombre) {
+    document.getElementById('id-producto-eliminar').value = id;
+    document.getElementById('nombre-producto').textContent = nombre;
+    document.getElementById('modal-eliminar').style.display = 'flex';
+}
+
+function cerrarModal() {
+    document.getElementById('modal-eliminar').style.display = 'none';
+}
+
+function inicializarProductos() {
+    // Búsqueda en tiempo real de productos
+    const campoBusqueda = document.getElementById('buscar-productos');
+    if (campoBusqueda) {
+        campoBusqueda.addEventListener('input', function(e) {
+            const termino = e.target.value.toLowerCase();
+            const filas = document.querySelectorAll('.tabla-productos tbody tr');
+            
+            filas.forEach(fila => {
+                const texto = fila.textContent.toLowerCase();
+                if (texto.includes(termino)) {
+                    fila.style.display = '';
+                } else {
+                    fila.style.display = 'none';
+                }
+            });
+        });
+    }
+    
+    // Cerrar modal al hacer clic fuera
+    const modalEliminar = document.getElementById('modal-eliminar');
+    if (modalEliminar) {
+        modalEliminar.addEventListener('click', function(e) {
+            if (e.target === this) {
+                cerrarModal();
+            }
+        });
+    }
+}

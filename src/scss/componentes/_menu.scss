@@ -268,3 +268,430 @@
         background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
     }
 }
+
+// Estilos para gestión de productos
+.contenedor-productos {
+    max-width: 140rem;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.acciones-superiores {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3rem;
+    gap: 2rem;
+    flex-wrap: wrap;
+    
+    .boton-primario {
+        background: linear-gradient(135deg, v.$azul 0%, darken(v.$azul, 10%) 100%);
+        color: v.$blanco;
+        padding: 1.2rem 2rem;
+        border-radius: 0.8rem;
+        text-decoration: none;
+        font-weight: v.$bold;
+        font-size: 1.4rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(32, 189, 169, 0.3);
+            background: linear-gradient(135deg, lighten(v.$azul, 5%) 0%, v.$azul 100%);
+        }
+        
+        svg {
+            width: 2rem;
+            height: 2rem;
+        }
+    }
+    
+    .busqueda {
+        flex: 1;
+        max-width: 40rem;
+        
+        .campo-busqueda {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.8rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: v.$blanco;
+            font-size: 1.4rem;
+            transition: all 0.3s ease;
+            
+            &::placeholder {
+                color: rgba(255, 255, 255, 0.6);
+            }
+            
+            &:focus {
+                outline: none;
+                border-color: v.$azul;
+                background-color: rgba(255, 255, 255, 0.15);
+                box-shadow: 0 0 0 3px rgba(32, 189, 169, 0.2);
+            }
+        }
+    }
+}
+
+.tabla-contenedor {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 1.5rem;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.tabla-productos {
+    width: 100%;
+    border-collapse: collapse;
+    
+    thead {
+        background: linear-gradient(135deg, v.$azul 0%, darken(v.$azul, 15%) 100%);
+        
+        th {
+            padding: 1.5rem 1rem;
+            text-align: left;
+            color: v.$blanco;
+            font-weight: v.$bold;
+            font-size: 1.4rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            
+            &:first-child {
+                padding-left: 2rem;
+            }
+            
+            &:last-child {
+                padding-right: 2rem;
+                text-align: center;
+            }
+        }
+    }
+    
+    tbody {
+        tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
+            
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+        
+        td {
+            padding: 1.5rem 1rem;
+            color: v.$blanco;
+            font-size: 1.3rem;
+            vertical-align: middle;
+            
+            &:first-child {
+                padding-left: 2rem;
+            }
+            
+            &:last-child {
+                padding-right: 2rem;
+                text-align: center;
+            }
+        }
+    }
+}
+
+.id {
+    font-family: 'Courier New', monospace;
+    font-weight: v.$bold;
+    color: v.$azul;
+}
+
+.nombre {
+    font-weight: v.$bold;
+    max-width: 20rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.precio {
+    font-weight: v.$bold;
+    color: v.$verde;
+    font-size: 1.4rem;
+}
+
+.cantidad-badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 1rem;
+    font-weight: v.$bold;
+    font-size: 1.2rem;
+    
+    &.disponible {
+        background-color: rgba(4, 165, 85, 0.2);
+        color: v.$verde;
+        border: 1px solid rgba(4, 165, 85, 0.3);
+    }
+    
+    &.agotado {
+        background-color: rgba(203, 0, 0, 0.2);
+        color: v.$rojo;
+        border: 1px solid rgba(203, 0, 0, 0.3);
+    }
+}
+
+.acciones-tabla {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.btn-accion {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    
+    svg {
+        width: 1.6rem;
+        height: 1.6rem;
+    }
+    
+    &.btn-ver {
+        background-color: rgba(59, 130, 246, 0.2);
+        color: #3b82f6;
+        border-color: rgba(59, 130, 246, 0.3);
+        
+        &:hover {
+            background-color: rgba(59, 130, 246, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+    }
+    
+    &.btn-editar {
+        background-color: rgba(32, 189, 169, 0.2);
+        color: v.$azul;
+        border-color: rgba(32, 189, 169, 0.3);
+        
+        &:hover {
+            background-color: rgba(32, 189, 169, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(32, 189, 169, 0.3);
+        }
+    }
+    
+    &.btn-eliminar {
+        background-color: rgba(203, 0, 0, 0.2);
+        color: v.$rojo;
+        border-color: rgba(203, 0, 0, 0.3);
+        cursor: pointer;
+        
+        &:hover {
+            background-color: rgba(203, 0, 0, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(203, 0, 0, 0.3);
+        }
+    }
+}
+
+.sin-datos {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.mensaje-vacio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    color: rgba(255, 255, 255, 0.7);
+    
+    svg {
+        color: rgba(255, 255, 255, 0.4);
+    }
+    
+    h3 {
+        font-size: 2.4rem;
+        margin: 0;
+        color: v.$blanco;
+    }
+    
+    p {
+        font-size: 1.6rem;
+        margin: 0;
+    }
+    
+    .boton {
+        background: linear-gradient(135deg, v.$azul 0%, darken(v.$azul, 10%) 100%);
+        color: v.$blanco;
+        padding: 1.2rem 2.5rem;
+        border-radius: 0.8rem;
+        text-decoration: none;
+        font-weight: v.$bold;
+        font-size: 1.4rem;
+        transition: all 0.3s ease;
+        
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(32, 189, 169, 0.3);
+        }
+    }
+}
+
+// Modal de confirmación
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.modal-contenido {
+    background: linear-gradient(135deg, v.$negroClaro 0%, darken(v.$negroClaro, 5%) 100%);
+    border-radius: 1.5rem;
+    padding: 0;
+    max-width: 50rem;
+    width: 90%;
+    border: 2px solid v.$azul;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 2.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    h3 {
+        margin: 0;
+        color: v.$blanco;
+        font-size: 2rem;
+    }
+    
+    .cerrar-modal {
+        background: none;
+        border: none;
+        color: v.$blanco;
+        font-size: 2.4rem;
+        cursor: pointer;
+        padding: 0;
+        width: 3rem;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    }
+}
+
+.modal-body {
+    padding: 2.5rem;
+    
+    p {
+        color: v.$blanco;
+        font-size: 1.6rem;
+        margin: 0 0 1rem 0;
+        
+        &.advertencia {
+            color: v.$rojo;
+            font-weight: v.$bold;
+            font-size: 1.4rem;
+        }
+    }
+}
+
+.modal-footer {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: flex-end;
+    padding: 2rem 2.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.boton-secundario {
+    background: rgba(255, 255, 255, 0.1);
+    color: v.$blanco;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    
+    &:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+}
+
+.boton-peligro {
+    background: linear-gradient(135deg, v.$rojo 0%, darken(v.$rojo, 10%) 100%);
+    color: v.$blanco;
+    
+    &:hover {
+        background: linear-gradient(135deg, lighten(v.$rojo, 5%) 0%, v.$rojo 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(203, 0, 0, 0.3);
+    }
+}
+
+// Responsive
+@include m.tablet {
+    .acciones-superiores {
+        flex-direction: column;
+        align-items: stretch;
+        
+        .busqueda {
+            max-width: none;
+        }
+    }
+    
+    .tabla-productos {
+        font-size: 1.2rem;
+        
+        thead th,
+        tbody td {
+            padding: 1rem 0.5rem;
+            
+            &:first-child {
+                padding-left: 1rem;
+            }
+            
+            &:last-child {
+                padding-right: 1rem;
+            }
+        }
+    }
+    
+    .acciones-tabla {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+    
+    .btn-accion {
+        width: 3rem;
+        height: 3rem;
+        
+        svg {
+            width: 1.4rem;
+            height: 1.4rem;
+        }
+    }
+}
+

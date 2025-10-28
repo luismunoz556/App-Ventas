@@ -32,6 +32,20 @@ $router->get('/principal', [PaginaPrincipal::class, 'index']);
 
 //Ingreso de Datos Maestros
 $router->get('/datos-maestros', [DatosMaestros::class, 'index']);
+
+// Datos Maestros
+$router->get('/maestros', [DatosMaestros::class, 'index']);
+$router->get('/maestros/clientes', [DatosMaestros::class, 'clientes']);
+
+// Maestros - Productos
+$router->get('/maestros/productos', [DatosMaestros::class, 'productos']);
+$router->get('/maestros/productos/ver', [DatosMaestros::class, 'verProducto']);
+$router->get('/maestros/productos/crear', [DatosMaestros::class, 'crearProducto']);
+$router->post('/maestros/productos/crear', [DatosMaestros::class, 'crearProducto']);
+$router->get('/maestros/productos/editar', [DatosMaestros::class, 'editarProducto']);
+$router->post('/maestros/productos/editar', [DatosMaestros::class, 'editarProducto']);
+$router->post('/maestros/productos/eliminar', [DatosMaestros::class, 'eliminarProducto']);
+
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
 $router->comprobarRutas();
 
