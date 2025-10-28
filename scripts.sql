@@ -1,59 +1,59 @@
 CREATE TABLE `usuarios` (
-  `ID_USU` int NOT NULL AUTO_INCREMENT,
-  `NOMBRE` varchar(60) DEFAULT NULL,
-  `APELLIDO` varchar(60) DEFAULT NULL,
-  `EMAIL` varchar(30) DEFAULT NULL,
-  `PASSWORD` varchar(60) DEFAULT NULL,
-  `TELEFONO` varchar(10) DEFAULT NULL,
-  `ADMIN` tinyint(1) DEFAULT NULL,
-  `CONFIRMADO` tinyint(1) DEFAULT NULL,
-  `TOKEN` varchar(15) DEFAULT NULL,
-  PRIMARY KEY (`ID_USU`)
-)
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(60) DEFAULT NULL,
+  `apellido` varchar(60) DEFAULT NULL,
+  `email` varchar(30) DEFAULT NULL,
+  `password` varchar(60) DEFAULT NULL,
+  `telefono` varchar(10) DEFAULT NULL,
+  `admin` tinyint(1) DEFAULT NULL,
+  `confirmado` tinyint(1) DEFAULT NULL,
+  `token` varchar(15) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
 
 CREATE TABLE `cliente` (
-  `ID_CLI` int NOT NULL AUTO_INCREMENT,
-  `NOMBRE` varchar(45) DEFAULT NULL,
-  `APELLIDO` varchar(45) DEFAULT NULL,
-  `TELEFONO` varchar(10) DEFAULT NULL,
-  PRIMARY KEY (`ID_CLI`)
-) 
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(45) DEFAULT NULL,
+  `apellido` varchar(45) DEFAULT NULL,
+  `telefono` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
 
 CREATE TABLE `entrada` (
-  `ID_ENT` int NOT NULL AUTO_INCREMENT,
-  `FECHA` datetime DEFAULT NULL,
-  `ID_USU` int DEFAULT NULL,
-  PRIMARY KEY (`ID_ENT`)
-)
+  `id` int NOT NULL AUTO_INCREMENT,
+  `fecha` datetime DEFAULT NULL,
+  `id_usu` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
 
 CREATE TABLE `entrada_det` (
-  `ID_ENT` int DEFAULT NULL,
-  `ID_PROD` int DEFAULT NULL,
-  `CANTIDAD` int DEFAULT NULL
-)
+  `id` int DEFAULT NULL,
+  `id_prod` int DEFAULT NULL,
+  `cantidad` int DEFAULT NULL
+);
 
 CREATE TABLE `productos` (
-  `ID_PRO` int NOT NULL AUTO_INCREMENT,
-  `NOMBRE` varchar(45) DEFAULT NULL,
-  `PRECIO` decimal(5,2) DEFAULT NULL,
-  `CANTIDAD` int DEFAULT NULL,
-  PRIMARY KEY (`ID_PRO`)
-) 
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(45) DEFAULT NULL,
+  `precio` decimal(5,2) DEFAULT NULL,
+  `cantidad` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
 
 CREATE TABLE `ventas` (
-  `ID_VEN` int NOT NULL AUTO_INCREMENT,
-  `FECHA` datetime DEFAULT NULL,
-  `ID_CLI` int DEFAULT NULL,
-  `TIPO_PAGO` varchar(45) DEFAULT NULL,
-  `CREDITO` tinyint(1) DEFAULT NULL,
-  `TOTAL` decimal(5,2) DEFAULT NULL,
-  `ID_USU` int DEFAULT NULL,
-  PRIMARY KEY (`ID_VEN`)
-)
+  `id` int NOT NULL AUTO_INCREMENT,
+  `fecha` datetime DEFAULT NULL,
+  `id_cli` int DEFAULT NULL,
+  `tipo_pago` varchar(45) DEFAULT NULL,
+  `credito` tinyint(1) DEFAULT NULL,
+  `total` decimal(5,2) DEFAULT NULL,
+  `id_usu` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
 
 CREATE TABLE `ventas_det` (
-  `ID_VENTA` int DEFAULT NULL,
-  `ID_PROD` int DEFAULT NULL,
-  `CANTIDAD` int DEFAULT NULL,
-  `PRECIO` decimal(5,2) DEFAULT NULL
-) 
+  `id` int DEFAULT NULL,
+  `id_prod` int DEFAULT NULL,
+  `cantidad` int DEFAULT NULL,
+  `precio` decimal(5,2) DEFAULT NULL
+);

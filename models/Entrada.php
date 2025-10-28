@@ -5,15 +5,15 @@ namespace Model;
 class Entrada extends ActiveRecord {
     // Base de datos
     protected static $tabla = 'entrada';
-    protected static $columnasDB = ['ID_ENT', 'FECHA', 'ID_USU'];
+    protected static $columnasDB = ['id', 'fecha', 'id_usu'];
 
-    public $ID_ENT;
-    public $FECHA;
-    public $ID_USU;
+    public $id;
+    public $fecha;
+    public $id_usu;
 
     public function __construct($args = []) {
-        $this->ID_ENT = $args['ID_ENT'] ?? null;
-        $this->FECHA = $args['FECHA'] ?? '';
-        $this->ID_USU = $args['ID_USU'] ?? '';
+        $this->id = $args['id'] ?? null;
+        $this->fecha = $args['fecha'] ?? '';
+        $this->id_usu = $args['id_usu'] ?? '';
     }
 }

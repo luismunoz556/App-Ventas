@@ -5,17 +5,17 @@ namespace Model;
 class Cliente extends ActiveRecord {
     // Base de datos
     protected static $tabla = 'cliente';
-    protected static $columnasDB = ['ID_CLI', 'NOMBRE', 'APELLIDO', 'TELEFONO'];
+    protected static $columnasDB = ['id', 'nombre', 'apellido', 'telefono'];
 
-    public $ID_CLI;
-    public $NOMBRE;
-    public $APELLIDO;
-    public $TELEFONO;
+    public $id;
+    public $nombre;
+    public $apellido;
+    public $telefono;
 
     public function __construct($args = []) {
-        $this->ID_CLI = $args['ID_CLI'] ?? null;
-        $this->NOMBRE = $args['NOMBRE'] ?? '';
-        $this->APELLIDO = $args['APELLIDO'] ?? '';
-        $this->TELEFONO = $args['TELEFONO'] ?? '';
+        $this->id = $args['id'] ?? null;
+        $this->nombre = $args['nombre'] ?? '';
+        $this->apellido = $args['apellido'] ?? '';
+        $this->telefono = $args['telefono'] ?? '';
     }
 }

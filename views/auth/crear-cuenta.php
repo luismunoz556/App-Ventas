@@ -6,27 +6,27 @@
 <form action="/crear-cuenta" method="POST" class="formulario">
     <div class="campo">
         <label for="nombre">Nombre</label>
-        <input type="text" id="nombre" name="NOMBRE" placeholder="Tu Nombre" value="<?php echo $usuario->NOMBRE; ?>">
+        <input type="text" id="nombre" name="nombre" placeholder="Tu Nombre" value="<?php echo $usuario->nombre; ?>">
     </div>
 
     <div class="campo">
         <label for="apellido">Apellido</label>
-        <input type="text" id="apellido" name="APELLIDO" placeholder="Tu Apellido" value="<?php echo $usuario->APELLIDO; ?>">
+        <input type="text" id="apellido" name="apellido" placeholder="Tu Apellido" value="<?php echo $usuario->apellido; ?>">
     </div>
 
     <div class="campo">
         <label for="telefono">Telefono</label>
-        <input type="tel" id="telefono" name="TELEFONO" placeholder="Tu Telefono" value="<?php echo $usuario->TELEFONO; ?>">
+        <input type="tel" id="telefono" name="telefono" placeholder="Tu Telefono" value="<?php echo $usuario->telefono; ?>">
     </div>
 
     <div class="campo">
         <label for="email">Email</label>
-        <input type="email" id="email" name="EMAIL" placeholder="Tu Email" value="<?php echo $usuario->EMAIL; ?>">
+        <input type="email" id="email" name="email" placeholder="Tu Email" value="<?php echo $usuario->email; ?>">
     </div>
 
     <div class="campo">
         <label for="password">Password</label>
-        <input type="password" id="password" name="PASSWORD" placeholder="Tu Password" >
+        <input type="password" id="password" name="password" placeholder="Tu Password" >
     </div>
 
     <input type="submit" value="Crear Cuenta" class="boton">

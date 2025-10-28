@@ -1,0 +1,247 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.header{
+    background-color: v.$negroClaro;
+    padding: 1rem 0;
+    
+    .contenido-header{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 120rem;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .mobile-menu {
+        display: block;
+        position: relative;
+        
+        // Ocultar en tablet y desktop
+        @include m.tablet {
+            display: none;
+        }
+        
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            
+            .hamburger {
+                width: 2.5rem;
+                height: 0.3rem;
+                background-color: v.$blanco;
+                border-radius: 0.2rem;
+                transition: all 0.3s ease;
+            }
+            
+            &:hover .hamburger {
+                background-color: v.$azul;
+            }
+        }
+        
+        .mobile-menu-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: v.$negro;
+            border: 2px solid v.$azul;
+            border-radius: 0.5rem;
+            min-width: 25rem;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-1rem);
+            transition: all 0.3s ease;
+            
+            &.active {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+            }
+        }
+        
+        .mobile-menu-content {
+            padding: 1.5rem;
+            
+            .usuario-info-mobile {
+                text-align: center;
+                margin-bottom: 1.5rem;
+                padding-bottom: 1rem;
+                border-bottom: 1px solid v.$gris;
+                
+                .nombre-usuario-mobile {
+                    color: v.$blanco;
+                    font-weight: v.$bold;
+                    font-size: 1.4rem;
+                    display: block;
+                    margin-bottom: 0.5rem;
+                }
+                
+                .fecha-hora-mobile {
+                    display: flex;
+                    justify-content: center;
+                    gap: 1rem;
+                    
+                    .fecha-actual-mobile,
+                    .hora-actual-mobile {
+                        color: v.$blanco;
+                        font-size: 1rem;
+                        opacity: 0.8;
+                    }
+                }
+            }
+            
+            .mobile-nav {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                
+                .mobile-nav-item {
+                    color: v.$blanco;
+                    text-decoration: none;
+                    padding: 1rem;
+                    border-radius: 0.5rem;
+                    transition: all 0.3s ease;
+                    text-align: center;
+                    font-weight: v.$regular;
+                    
+                    &:hover {
+                        background-color: v.$azul;
+                        transform: translateX(0.5rem);
+                    }
+                    
+                    &.cerrar-sesion {
+                        background-color: v.$rojo;
+                        margin-top: 1rem;
+                        
+                        &:hover {
+                            background-color: darken(v.$rojo, 10%);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .header-izquierda {
+        flex: 0 0 auto;
+        
+        .logo{
+            height: 5rem;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        // Siempre visible, pero más pequeño en móvil
+        @include m.tablet {
+            .logo {
+                height: 5rem;
+            }
+        }
+    }
+
+    .header-centro {
+        flex: 1;
+        text-align: center;
+        
+        h1{
+            color: v.$blanco;
+            font-weight: v.$bold;
+            margin: 0;
+            font-size: 2.5rem;
+            
+            @include m.tablet {
+                font-size: 3rem;
+            }
+        }
+        
+        // Ocultar en móvil, mostrar en tablet y superiores
+        display: none;
+        @include m.tablet {
+            display: block;
+        }
+    }
+
+    .header-derecha {
+        flex: 0 0 auto;
+        
+        // Ocultar en móvil, mostrar en tablet y superiores
+        display: none;
+        @include m.tablet {
+            display: flex;
+        }
+        
+        .usuario-info {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            
+            .info-usuario {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                text-align: right;
+                
+                .nombre-usuario {
+                    color: v.$blanco;
+                    font-weight: v.$bold;
+                    font-size: 1.4rem;
+                    margin: 0;
+                    line-height: 1.2;
+                }
+                
+                .fecha-hora {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-end;
+                    gap: 0.1rem;
+                    margin-top: 0.3rem;
+                    
+                    .fecha-actual,
+                    .hora-actual {
+                        color: v.$blanco;
+                        font-size: 1rem;
+                        opacity: 0.9;
+                        font-weight: v.$regular;
+                        margin: 0;
+                        line-height: 1.1;
+                    }
+                }
+            }
+            
+            .btn-cerrar-sesion {
+                background-color: v.$rojo;
+                color: v.$blanco;
+                padding: 0.8rem 1.5rem;
+                border-radius: 0.5rem;
+                text-decoration: none;
+                font-weight: v.$bold;
+                font-size: 1.2rem;
+                transition: all 0.3s ease;
+                border: 2px solid transparent;
+                display: inline-block;
+                white-space: nowrap;
+                
+                &:hover {
+                    background-color: darken(v.$rojo, 10%);
+                    transform: translateY(-2px);
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                }
+                
+                &:active {
+                    transform: translateY(0);
+                }
+            }
+        }
+    }
+    border-color: v.$azul;
+    border-width: 0.2rem;
+    border-style: solid;
+}
+

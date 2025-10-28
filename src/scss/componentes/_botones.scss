@@ -5,3 +5,14 @@
     @include m.boton(v.$azul, v.$blanco);
     border-radius: 1rem;
 }
+
+.btn-cerrar-sesion {
+    @include m.boton(v.$rojo, v.$blanco);
+    padding: 0.8rem 1.5rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: v.$bold;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
