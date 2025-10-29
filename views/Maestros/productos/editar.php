@@ -1,16 +1,16 @@
 <?php 
-$cantidad = $_GET['cantidad'] ?? 0;
+$cantidad = $producto->cantidad ?? 0;
 ?>
-<h1 class="nombre-pagina">Crear Nuevo Producto</h1>
+<h1 class="nombre-pagina">Editar Producto</h1>
 
 <div class="contenedor-formulario">
     <div class="formulario-card">
         <div class="formulario-header">
             <h2>Información del Producto</h2>
-            <p>Completa los datos para crear un nuevo producto</p>
+            <p>Modifica los datos del producto seleccionado</p>
         </div>
 
-        <form class="formulario" method="POST" action="/maestros/productos/crear">
+        <form class="formulario" method="POST" action="/maestros/productos/editar?id=<?php echo $producto->id; ?>">
             <div class="campo">
                 <label for="nombre">Nombre del Producto *</label>
                 <input 
@@ -70,7 +70,6 @@ $cantidad = $_GET['cantidad'] ?? 0;
                     min="0"
                     value="<?php echo s($cantidad); ?>"
                     required
-                    readonly
                 >
                 <?php if(isset($errores['cantidad'])): ?>
                     <div class="error">
@@ -95,7 +94,7 @@ $cantidad = $_GET['cantidad'] ?? 0;
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M20 6L9 17L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    Crear Producto
+                    Actualizar Producto
                 </button>
             </div>
         </form>
@@ -124,7 +123,14 @@ $cantidad = $_GET['cantidad'] ?? 0;
                     <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
                     <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                La cantidad inicial puede ser 0
+                La cantidad puede ser 0 o mayor
+            </li>
+            <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                    <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Los cambios se guardarán inmediatamente
             </li>
         </ul>
     </div>

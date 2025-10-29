@@ -11,7 +11,7 @@
         <div class="contenido-header">
             <!-- Logo siempre visible -->
             <div class="header-izquierda">
-                <a href="">
+                <a href="/principal">
                     <img class="logo" src="/build/img/logo_solarix.png" alt="imagen logo">
                 </a>
             </div>
@@ -86,6 +86,6 @@
 
         <p class="copyright">Todos los derechos son reservados <?php echo date('Y'); ?> &copy</p>
     </footer>
-    <script src="build/js/app.js"></script>
+    <script src="/build/js/app.js"></script>
 </body>
 </html>

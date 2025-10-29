@@ -46,6 +46,10 @@ $router->get('/maestros/productos/editar', [DatosMaestros::class, 'editarProduct
 $router->post('/maestros/productos/editar', [DatosMaestros::class, 'editarProducto']);
 $router->post('/maestros/productos/eliminar', [DatosMaestros::class, 'eliminarProducto']);
 
+// Maestros - Clientes
+$router->get('/maestros/clientes/crear', [DatosMaestros::class, 'crearCliente']);
+$router->post('/maestros/clientes/crear', [DatosMaestros::class, 'crearCliente']);
+
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
 $router->comprobarRutas();
 

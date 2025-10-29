@@ -35,7 +35,7 @@ CREATE TABLE `entrada_det` (
 CREATE TABLE `productos` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) DEFAULT NULL,
-  `precio` decimal(5,2) DEFAULT NULL,
+  `precio` decimal(10,2) DEFAULT NULL,
   `cantidad` int DEFAULT NULL,
   PRIMARY KEY (`id`)
 );

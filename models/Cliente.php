@@ -18,4 +18,16 @@ class Cliente extends ActiveRecord {
         $this->apellido = $args['apellido'] ?? '';
         $this->telefono = $args['telefono'] ?? '';
     }
+
+    public function validar() {
+        if(!$this->nombre) {
+            self::$alertas['error'][] = 'El nombre del cliente es obligatorio';
+        }
+        if(!$this->apellido) {
+            self::$alertas['error'][] = 'El apellido del cliente es obligatorio';
+        }
+        if(!$this->telefono) {
+            self::$alertas['error'][] = 'El telefono del cliente es obligatorio';
+        }
+    }
 }

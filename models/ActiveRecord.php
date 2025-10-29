@@ -33,7 +33,6 @@ class ActiveRecord {
     public static function consultarSQL($query) {
         // Consultar la base de datos
         $resultado = self::$db->query($query);
-
         // Iterar los resultados
         $array = [];
         while($registro = $resultado->fetch_assoc()) {
@@ -50,7 +49,7 @@ class ActiveRecord {
     // Crea el objeto en memoria que es igual al de la BD
     protected static function crearObjeto($registro) {
         $objeto = new static;
-
+        //debuguear($registro);
         foreach($registro as $key => $value ) {
             if(property_exists( $objeto, $key  )) {
                 $objeto->$key = $value;
@@ -140,7 +139,6 @@ class ActiveRecord {
         $query .= " ) VALUES ('"; 
         $query .= join("', '", array_values($atributos));
         $query .= "') ";
-
         // Resultado de la consulta
         $resultado = self::$db->query($query);
         return [
