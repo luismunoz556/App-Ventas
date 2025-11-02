@@ -3,9 +3,10 @@
 require_once __DIR__ . '/../includes/app.php';
 
 use MVC\Router;
+use Controller\VentasController;
+use Controller\DatosMaestros;
 use Controller\LoginController;
 use Controller\PaginaPrincipal;
-use Controller\DatosMaestros;
 
 
 $router = new Router();
@@ -49,6 +50,16 @@ $router->post('/maestros/productos/eliminar', [DatosMaestros::class, 'eliminarPr
 // Maestros - Clientes
 $router->get('/maestros/clientes/crear', [DatosMaestros::class, 'crearCliente']);
 $router->post('/maestros/clientes/crear', [DatosMaestros::class, 'crearCliente']);
+$router->get('/maestros/clientes/editar', [DatosMaestros::class, 'editarCliente']);
+$router->post('/maestros/clientes/editar', [DatosMaestros::class, 'editarCliente']);
+$router->post('/maestros/clientes/eliminar', [DatosMaestros::class, 'eliminarCliente']);
+$router->get('/maestros/clientes/ver', [DatosMaestros::class, 'verCliente']);
+
+// Pedidos
+$router->get('/ventas', [VentasController::class, 'ventas']);
+$router->get('/ventas/crear', [VentasController::class, 'crearVenta']);
+$router->post('/ventas/crear', [VentasController::class, 'crearVenta']);
+$router->get('/ventas/ver', [VentasController::class, 'verVenta']);
 
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
 $router->comprobarRutas();

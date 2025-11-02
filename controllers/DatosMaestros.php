@@ -73,7 +73,7 @@ class DatosMaestros {
     public static function editarProducto(Router $router) {
         $id = $_GET['id'] ?? '';
         $producto = Productos::find($id);
-        
+
         if(!$producto) {
             header('Location: /maestros/productos');
             return;
@@ -106,7 +106,7 @@ class DatosMaestros {
     // Eliminar producto
     public static function eliminarProducto(Router $router) {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
-            debuguear($_POST);
+            
             $id = $_POST['id'] ?? '';
             
             if($id) {
@@ -152,6 +152,76 @@ class DatosMaestros {
         $router->render('maestros/clientes/crear', [
             'cliente' => $cliente,
             'errores' => $errores
+        ]);
+    }
+
+    public static function editarCliente(Router $router) {
+        $id = $_GET['id'] ?? '';
+        $cliente = Cliente::find($id);
+        if(!$cliente) {
+            header('Location: /maestros/clientes');
+            return;
+        }
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            //debuguear($_POST);
+            $cliente->sincronizar($_POST);
+            $alertas = $cliente->validar();
+            $errores = $alertas['error'] ?? [];
+            if(empty($errores)) {
+                $resultado = $cliente->guardar();
+                if($resultado) {
+                    header('Location: /maestros/clientes?editado=1');
+                    return;
+                } else {
+                    $errores[] = 'Error al actualizar el cliente';
+                }
+            }
+        }
+
+        $errores = [];
+        $router->render('maestros/clientes/editar', [
+            'cliente' => $cliente,
+            'errores' => $errores
+        ]);
+    }
+
+    public static function eliminarCliente(Router $router) {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+           
+            $id = $_POST['id'] ?? '';
+            
+            if($id) {
+                $cliente = Cliente::find($id);
+                
+                if($cliente) {
+                    $resultado = $cliente->eliminar();
+                    if($resultado) {
+                        header('Location: /maestros/clientes?eliminado=1');
+                        return;
+                    } else {
+                        header('Location: /maestros/clientes?error=1');
+                        return;
+                    }
+                } else {
+                    header('Location: /maestros/clientes?error=1');
+                    return;
+                }
+            }
+        }
+        
+        header('Location: /maestros/clientes');
+     
+    }
+
+    public static function verCliente(Router $router) {
+        $id = $_GET['id'] ?? '';
+        $cliente = Cliente::find($id);
+        if(!$cliente) {
+            header('Location: /maestros/clientes');
+            return;
+        }
+        $router->render('maestros/clientes/ver', [
+            'cliente' => $cliente
         ]);
     }
 }

@@ -44,15 +44,23 @@
 <!-- Fin Alertas de acciones -->
 
 <!-- Inicio Contenedor de Clientes -->
-<div class="contenedor-clientes">
+<div class="contenedor-general">
     <!-- Barra de acciones superiores -->
     <div class="acciones-superiores">
-        <a href="/maestros/clientes/crear" class="boton boton-primario">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            Nuevo Cliente
-        </a>
+        <div class="acciones-izquierda">
+            <a href="/maestros" class="boton boton-secundario">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Volver
+            </a>
+            <a href="/maestros/clientes/crear" class="boton boton-primario">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Nuevo Cliente
+            </a>
+        </div>
         <div class="busqueda">
             <input type="text" placeholder="Buscar clientes..." class="campo-busqueda" id="buscar-clientes">
         </div>
@@ -60,7 +68,7 @@
 
     <!-- Tabla de Clientes -->
     <div class="tabla-contenedor">
-        <table class="tabla-productos">
+        <table class="tabla-general">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -119,5 +127,26 @@
                 <?php endif; ?>
             </tbody>
         </table>
+    </div>
+</div>
+
+<!-- Modal de confirmación para eliminar -->
+<div id="modal-eliminar" class="modal">
+    <div class="modal-contenido">
+        <div class="modal-header">
+            <h3>Confirmar Eliminación</h3>
+            <button class="cerrar-modal" onclick="cerrarModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>¿Estás seguro de que deseas eliminar <strong id="nombre-cliente"></strong>?</p>
+            <p class="advertencia">Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="boton boton-secundario" onclick="cerrarModal()">Cancelar</button>
+            <form id="form-eliminar" method="POST" action="/maestros/clientes/eliminar" style="display: inline;">
+                <input type="hidden" name="id" id="id-cliente-eliminar">
+                <button type="submit" class="boton boton-peligro">Eliminar</button>
+            </form>
+        </div>
     </div>
 </div>

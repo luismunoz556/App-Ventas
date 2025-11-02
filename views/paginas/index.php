@@ -15,14 +15,14 @@
             <p>Gestionar productos, clientes y configuraciones</p>
         </a>
 
-        <a href="/registrar-pedido" class="boton-menu">
+        <a href="/ventas" class="boton-menu">
             <div class="icono-menu">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M16 11V7C16 4.79086 14.2091 3 12 3C9.79086 3 8 4.79086 8 7V11M5 9H19L18 21H6L5 9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
-            <h3>Registrar Pedido</h3>
-            <p>Crear y gestionar nuevos pedidos de venta</p>
+            <h3>Registrar Ventas</h3>
+            <p>Crear y gestionar nuevas ventas</p>
         </a>
 
         <a href="/registrar-entrada" class="boton-menu">

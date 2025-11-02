@@ -459,3 +459,236 @@
         }
     }
 }
+
+// Estilos para formulario de pedidos
+.separador-seccion {
+    margin: 2rem 0;
+    border: none;
+    border-top: 2px solid v.$grisClaro;
+}
+
+.seccion-productos {
+    margin-top: 2rem;
+}
+
+.seccion-productos-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    gap: 1.5rem;
+    
+    > div {
+        width: 100%;
+    }
+    
+    h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        color: v.$grisOscuro;
+    }
+    
+    p {
+        margin: 0.5rem 0 0 0;
+        color: v.$gris;
+    }
+    
+    .boton {
+        align-self: center;
+        margin: 0 auto;
+    }
+}
+
+.lista-productos {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.tarjeta-producto {
+    background: v.$blanco;
+    border: 2px solid v.$grisClaro;
+    border-radius: 1.2rem;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    
+    &:hover {
+        border-color: v.$azul;
+        box-shadow: 0 4px 8px rgba(v.$azul, 0.1);
+    }
+}
+
+.tarjeta-producto-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid v.$grisClaro;
+}
+
+.numero-producto {
+    font-weight: bold;
+    color: v.$azul;
+    font-size: 1.1rem;
+}
+
+.btn-eliminar-producto {
+    background: transparent;
+    border: none;
+    color: v.$rojo;
+    cursor: pointer;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.6rem;
+    transition: all 0.2s;
+    
+    &:hover {
+        background: rgba(v.$rojo, 0.1);
+        transform: scale(1.1);
+    }
+}
+
+.tarjeta-producto-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.campo-tarjeta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    
+    label {
+        font-weight: 600;
+        color: v.$grisOscuro;
+        font-size: 0.9rem;
+    }
+    
+    input,
+    select {
+        padding: 0.75rem;
+        border: 2px solid v.$grisClaro;
+        border-radius: 0.8rem;
+        font-size: 1rem;
+        transition: all 0.2s;
+        
+        &:focus {
+            outline: none;
+            border-color: v.$azul;
+            box-shadow: 0 0 0 3px rgba(v.$azul, 0.1);
+        }
+    }
+}
+
+.grid-tarjeta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.input-group-precio {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.prefijo-precio {
+    position: absolute;
+    left: 1.2rem;
+    font-weight: 600;
+    color: v.$gris;
+    z-index: 1;
+}
+
+.input-group-precio input {
+    padding-left: 2rem;
+}
+
+.campo-subtotal input {
+    background: v.$grisClaro;
+    font-weight: 600;
+    color: v.$grisOscuro;
+}
+
+.resumen-total {
+    background: v.$grisClaro;
+    border-radius: 1.2rem;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.resumen-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.1rem;
+    
+    span {
+        color: v.$gris;
+    }
+    
+    strong {
+        color: v.$grisOscuro;
+        font-size: 1.3rem;
+    }
+}
+
+.resumen-total-final {
+    margin-left: auto;
+    padding-left: 2rem;
+    border-left: 2px solid v.$grisClaro;
+    
+    strong {
+        color: v.$azul;
+        font-size: 1.5rem;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+@include m.tablet {
+    .grid-tarjeta {
+        grid-template-columns: 1fr;
+    }
+    
+    .seccion-productos-header {
+        align-items: center;
+    }
+    
+    .resumen-total {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .resumen-total-final {
+        margin-left: 0;
+        padding-left: 0;
+        border-left: none;
+        border-top: 2px solid v.$grisClaro;
+        padding-top: 1rem;
+        width: 100%;
+        justify-content: space-between;
+    }
+}

@@ -15,6 +15,11 @@ class ActiveRecord {
         self::$db = $database;
     }
 
+    // Obtener la conexión a la BD
+    public static function getDB() {
+        return self::$db;
+    }
+
     public static function setAlerta($tipo, $mensaje) {
         static::$alertas[$tipo][] = $mensaje;
     }
@@ -176,4 +181,21 @@ class ActiveRecord {
         return $resultado;
     }
 
-}
+    public static function joinMultiple($tabela1, $campo1, $tabela2, $campo2,$valor2,$tabela3='', $campo3='',$valor3='') {
+        $query = "SELECT  ";
+        $query .= " C1.*,C2.".$valor2;
+        if($tabela3) {
+            $query .= " C3.".$valor3;
+        }
+        $query .= " FROM " . $tabela1 . " C1 ";
+        $query .= " JOIN " . $tabela2 . " C2 ON C1." . $campo1 . " = C2." . $campo2 . " ";
+        if($tabela3) {
+            $query .= " JOIN " . $tabela3 . " C3 ON C1." . $campo1 . " = C3." . $campo3 . " ";
+        }
+        //debuguear($query);
+        $resultado = self::consultarSQL($query);
+        return $resultado;
+
+    }
+
+}    

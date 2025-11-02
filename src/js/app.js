@@ -43,13 +43,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Inicializar funcionalidades de productos si existen
-    inicializarProductos();
+    inicializarProductos(); 
+    inicializarClientes();
+    
+    // Inicializar formulario de pedidos si existe
+    inicializarFormularioPedidos();
 });
 
 // Funciones de gestión de productos
 function eliminarProducto(id, nombre) {
     document.getElementById('id-producto-eliminar').value = id;
     document.getElementById('nombre-producto').textContent = nombre;
+    document.getElementById('modal-eliminar').style.display = 'flex';
+}
+
+function eliminarCliente(id, nombre) {
+    //console.log('Eliminando cliente:', id, nombre);
+    document.getElementById('id-cliente-eliminar').value = id;
+    document.getElementById('nombre-cliente').textContent = nombre;
     document.getElementById('modal-eliminar').style.display = 'flex';
 }
 
@@ -85,4 +96,179 @@ function inicializarProductos() {
             }
         });
     }
+}
+
+function inicializarClientes() {
+    // Búsqueda en tiempo real de clientes
+    const campoBusqueda = document.getElementById('buscar-clientes');
+    //console.log('Campo de búsqueda encontrado:', campoBusqueda);
+    if (campoBusqueda) {
+        campoBusqueda.addEventListener('input', function(e) {
+            const termino = e.target.value.toLowerCase();
+            const filas = document.querySelectorAll('.tabla-clientes tbody tr');
+            
+            filas.forEach(fila => {
+                const texto = fila.textContent.toLowerCase();
+                if (texto.includes(termino)) {
+                    fila.style.display = '';
+                } else {
+                    fila.style.display = 'none';
+                }
+            });
+        });
+    }
+    // Cerrar modal al hacer clic fuera
+    const modalEliminar = document.getElementById('modal-eliminar');
+    if (modalEliminar) {
+        modalEliminar.addEventListener('click', function(e) {
+            if (e.target === this) {
+                cerrarModal();
+            }
+        });
+    }
+}
+
+// Funcionalidad del formulario de pedidos
+function inicializarFormularioPedidos() {
+    const listaProductos = document.getElementById('lista-productos');
+    const tpl = document.getElementById('tpl-tarjeta-producto');
+    const btnAgregar = document.getElementById('btn-agregar-producto');
+    const totalInput = document.getElementById('total');
+    const tipoPago = document.getElementById('tipo_pago');
+    const creditoInput = document.getElementById('credito');
+    const cantidadProductos = document.getElementById('cantidad-productos');
+    const totalPedido = document.getElementById('total-pedido');
+
+    // Si no existe el formulario de pedidos, salir
+    if (!listaProductos || !tpl || !btnAgregar) {
+        return;
+    }
+
+    let indice = 0;
+    let numeroProducto = 1;
+
+    function formatearMoneda(valor) {
+        return parseFloat(valor || 0).toLocaleString('es-ES', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function recalcularTotales() {
+        let total = 0;
+        let cantidadTotal = 0;
+        
+        listaProductos.querySelectorAll('.tarjeta-producto').forEach(tarjeta => {
+            const cantidad = parseFloat(tarjeta.querySelector('.input-cantidad')?.value || '0');
+            const precio = parseFloat(tarjeta.querySelector('.input-precio')?.value || '0');
+            const subtotal = cantidad * precio;
+            const subtotalInput = tarjeta.querySelector('.input-subtotal');
+            
+            if (!Number.isNaN(subtotal)) {
+                total += subtotal;
+                cantidadTotal += cantidad;
+                if (subtotalInput) {
+                    subtotalInput.value = formatearMoneda(subtotal);
+                }
+            }
+        });
+        
+        if (totalInput) totalInput.value = total.toFixed(2);
+        if (totalPedido) totalPedido.textContent = '$' + formatearMoneda(total);
+        if (cantidadProductos) cantidadProductos.textContent = cantidadTotal;
+    }
+
+    function enlazarEventosTarjeta(tarjeta) {
+        const selectProd = tarjeta.querySelector('.select-producto, .input-producto-id');
+        const cantidad = tarjeta.querySelector('.input-cantidad');
+        const precio = tarjeta.querySelector('.input-precio');
+        const eliminar = tarjeta.querySelector('.btn-eliminar-producto');
+
+        // Evento para seleccionar producto
+        if (selectProd && selectProd.tagName === 'SELECT') {
+            selectProd.addEventListener('change', function() {
+                const opt = this.options[this.selectedIndex];
+                const precioData = parseFloat(opt.getAttribute('data-precio') || '0');
+                if (!Number.isNaN(precioData) && precio) {
+                    precio.value = precioData.toFixed(2);
+                    recalcularTotales();
+                }
+            });
+        }
+
+        // Eventos para cantidad y precio
+        [cantidad, precio].forEach(inp => {
+            if (inp) {
+                inp.addEventListener('input', function() {
+                    recalcularTotales();
+                });
+            }
+        });
+
+        // Evento para eliminar
+        if (eliminar) {
+            eliminar.addEventListener('click', function() {
+                if (listaProductos.querySelectorAll('.tarjeta-producto').length <= 1) {
+                    alert('Debe haber al menos un producto en el pedido');
+                    return;
+                }
+                tarjeta.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => {
+                    tarjeta.remove();
+                    recalcularTotales();
+                }, 300);
+            });
+        }
+    }
+
+    function agregarProducto() {
+        const html = tpl.innerHTML
+            .replaceAll('__INDEX__', String(indice++))
+            .replace('__NUM__', String(numeroProducto++));
+        
+        const temp = document.createElement('div');
+        temp.innerHTML = html;
+        const tarjeta = temp.querySelector('.tarjeta-producto');
+        
+        if (tarjeta) {
+            tarjeta.style.opacity = '0';
+            tarjeta.style.transform = 'translateY(-10px)';
+            listaProductos.appendChild(tarjeta);
+            
+            // Animación de entrada
+            setTimeout(() => {
+                tarjeta.style.transition = 'all 0.3s ease-in';
+                tarjeta.style.opacity = '1';
+                tarjeta.style.transform = 'translateY(0)';
+            }, 10);
+            
+            enlazarEventosTarjeta(tarjeta);
+            recalcularTotales();
+        }
+    }
+
+    // Event listeners
+    btnAgregar.addEventListener('click', agregarProducto);
+
+    // Control de crédito
+    function toggleCredito() {
+        if (tipoPago && creditoInput) {
+            if (tipoPago.value === 'credito') {
+                creditoInput.removeAttribute('readonly');
+                creditoInput.style.backgroundColor = '#fff';
+            } else {
+                creditoInput.setAttribute('readonly', 'readonly');
+                creditoInput.value = '0';
+                creditoInput.style.backgroundColor = '#f5f5f5';
+            }
+        }
+    }
+
+    if (tipoPago) {
+        tipoPago.addEventListener('change', toggleCredito);
+        toggleCredito();
+    }
+
+    // Agregar primera tarjeta por defecto
+    agregarProducto();
 }
