@@ -11,6 +11,16 @@ CREATE TABLE `usuarios` (
   PRIMARY KEY (`id`)
 );
 
+CREATE TABLE `kardex` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_prod` int DEFAULT NULL,
+  `fecha` datetime DEFAULT NULL,
+  `tipo` varchar(20) DEFAULT NULL,
+  `cantidad` int DEFAULT NULL,
+  `saldo` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+);
+
 CREATE TABLE `cliente` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) DEFAULT NULL,

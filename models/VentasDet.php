@@ -77,4 +77,16 @@ class VentasDet extends ActiveRecord {
         $resultado->free();
         return $detalles;
     }
+
+    // Eliminar todos los detalles de una venta
+    public static function eliminarPorVenta($idVenta) {
+        if(!$idVenta || !is_numeric($idVenta)) {
+            return false;
+        }
+        
+        $query = "DELETE FROM " . static::$tabla . " WHERE id = " . self::$db->escape_string(intval($idVenta));
+        $resultado = self::$db->query($query);
+        
+        return $resultado;
+    }
 }

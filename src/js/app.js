@@ -46,8 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
     inicializarProductos(); 
     inicializarClientes();
     
-    // Inicializar formulario de pedidos si existe
-    inicializarFormularioPedidos();
+    // Inicializar formulario de ventas si existe
+    inicializarFormularioVentas();
 });
 
 // Funciones de gestión de productos
@@ -61,6 +61,12 @@ function eliminarCliente(id, nombre) {
     //console.log('Eliminando cliente:', id, nombre);
     document.getElementById('id-cliente-eliminar').value = id;
     document.getElementById('nombre-cliente').textContent = nombre;
+    document.getElementById('modal-eliminar').style.display = 'flex';
+}
+
+function eliminarVenta(id, nombre) {
+    document.getElementById('id-venta-eliminar').value = id;
+    document.getElementById('nombre-venta').textContent = nombre;
     document.getElementById('modal-eliminar').style.display = 'flex';
 }
 
@@ -128,8 +134,8 @@ function inicializarClientes() {
     }
 }
 
-// Funcionalidad del formulario de pedidos
-function inicializarFormularioPedidos() {
+// Funcionalidad del formulario de ventas
+function inicializarFormularioVentas() {
     const listaProductos = document.getElementById('lista-productos');
     const tpl = document.getElementById('tpl-tarjeta-producto');
     const btnAgregar = document.getElementById('btn-agregar-producto');
@@ -157,6 +163,7 @@ function inicializarFormularioPedidos() {
     function recalcularTotales() {
         let total = 0;
         let cantidadTotal = 0;
+        let tieneProductosConValor = false;
         
         listaProductos.querySelectorAll('.tarjeta-producto').forEach(tarjeta => {
             const cantidad = parseFloat(tarjeta.querySelector('.input-cantidad')?.value || '0');
@@ -170,12 +177,36 @@ function inicializarFormularioPedidos() {
                 if (subtotalInput) {
                     subtotalInput.value = formatearMoneda(subtotal);
                 }
+                // Si tiene cantidad y precio válidos (mayores a 0), hay productos válidos
+                if (cantidad > 0 && precio > 0) {
+                    tieneProductosConValor = true;
+                }
             }
         });
         
-        if (totalInput) totalInput.value = total.toFixed(2);
-        if (totalPedido) totalPedido.textContent = '$' + formatearMoneda(total);
-        if (cantidadProductos) cantidadProductos.textContent = cantidadTotal;
+        // Guardar el total inicial que viene de PHP (solo la primera vez)
+        if (typeof recalcularTotales.totalInicial === 'undefined' && totalInput) {
+            recalcularTotales.totalInicial = parseFloat(totalInput.value || '0');
+        }
+        
+        // Actualizar totales solo si hay productos con valores válidos
+        // Esto evita sobrescribir el total inicial cuando no hay productos cargados aún
+        if (tieneProductosConValor) {
+            if (totalInput) totalInput.value = total.toFixed(2);
+            if (totalPedido) totalPedido.textContent = '$' + formatearMoneda(total);
+            if (cantidadProductos) cantidadProductos.textContent = cantidadTotal;
+        }
+    }
+    
+    // Inicializar totales desde el valor que viene de PHP (si existe)
+    function inicializarTotalesDesdePHP() {
+        if (totalInput && totalPedido) {
+            const totalPHP = parseFloat(totalInput.value || '0');
+            if (!Number.isNaN(totalPHP) && totalPHP > 0) {
+                // Inicializar el display con el valor que viene de PHP
+                totalPedido.textContent = '$' + formatearMoneda(totalPHP);
+            }
+        }
     }
 
     function enlazarEventosTarjeta(tarjeta) {
@@ -269,6 +300,29 @@ function inicializarFormularioPedidos() {
         toggleCredito();
     }
 
-    // Agregar primera tarjeta por defecto
-    agregarProducto();
+    // Inicializar totales desde PHP (si estamos editando)
+    inicializarTotalesDesdePHP();
+
+    // Enlazar eventos a las tarjetas existentes (si vienen renderizadas desde PHP)
+    listaProductos.querySelectorAll('.tarjeta-producto').forEach(tarjeta => {
+        enlazarEventosTarjeta(tarjeta);
+        // Actualizar número de producto si es necesario
+        const numeroProd = tarjeta.querySelector('.numero-producto');
+        if (numeroProd) {
+            const index = Array.from(listaProductos.querySelectorAll('.tarjeta-producto')).indexOf(tarjeta);
+            numeroProd.textContent = '#' + (index + 1);
+        }
+    });
+
+    // Ajustar índices para nuevas tarjetas
+    indice = listaProductos.querySelectorAll('.tarjeta-producto').length;
+    numeroProducto = indice + 1;
+
+    // Si no hay productos, agregar primera tarjeta por defecto
+    if (listaProductos.querySelectorAll('.tarjeta-producto').length === 0) {
+        agregarProducto();
+    } else {
+        // Si ya hay productos (renderizados desde PHP), recalcular para actualizar totales
+        recalcularTotales();
+    }
 }

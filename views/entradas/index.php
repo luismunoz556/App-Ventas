@@ -1,12 +1,11 @@
-<h1 class="nombre-pagina">Gestión de Ventas</h1>
-
+<h1 class="nombre-pagina">Gestión de Entradas de Productos</h1>
 <?php  if(isset($_GET['creado']) && $_GET['creado'] == '1'): ?>
     <div class="alerta alerta-exito">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
             <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        Venta creada exitosamente
+        Entrada de producto creada exitosamente
     </div>
 <?php endif; ?>
 
@@ -16,7 +15,7 @@
             <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
             <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        Venta actualizada exitosamente
+        Entrada de producto actualizada exitosamente
     </div>
 <?php endif; ?>
 
@@ -26,7 +25,7 @@
             <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
             <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        Venta eliminada exitosamente
+        Entrada de producto eliminada exitosamente
     </div>
 <?php endif; ?>
 
@@ -51,15 +50,15 @@
                 </svg>
                 Volver
             </a>
-            <a href="/ventas/crear" class="boton boton-primario">
+            <a href="/entradas-productos/crear" class="boton boton-primario">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                Nueva Venta
+                Nueva Entrada de Producto
             </a>
         </div>
         <div class="busqueda">
-            <input type="text" placeholder="Buscar ventas..." class="campo-busqueda" id="buscar-ventas"> <!-- Buscar por id de venta, fecha, cliente, tipo de pago, credito, total, usuario digitador ojo falta codigo en JS -->
+            <input type="text" placeholder="Buscar entradas de productos..." class="campo-busqueda" id="buscar-entradas-productos">
         </div>
     </div>
 
@@ -68,18 +67,14 @@
         <table class="tabla-general">
             <thead>
                 <tr>
-                    <th>Id_Venta</th>
+                    <th>Id_Entrada</th>
                     <th>Fecha</th>
-                    <th>Cliente</th>
-                    <th>Tipo_Pago</th>
-                    <th>Credito</th>
-                    <th>Total</th>
                     <th>Usuario Digitador</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                <?php if(empty($ventas)): ?>
+                <?php if(empty($entradas)): ?>
                 <tr>
                     <td colspan="8" class="sin-datos">
                         <div class="mensaje-vacio">
@@ -87,38 +82,27 @@
                                 <path d="M6 2L3 6V20C3 20.5304 3.21071 21.0391 3.58579 21.4142C3.96086 21.7893 4.46957 22 5 22H19C19.5304 22 20.0391 21.7893 20.4142 21.4142C20.7893 21.0391 21 20.5304 21 20V6L18 2H6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 <path d="M3 6H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            <h3>No hay ventas registradas</h3>
-                            <p>Comienza creando tu primera venta</p>
-                            <a href="/pedidos/crear" class="boton">Crear Pedido</a>
+                            <h3>No hay entradas de productos registradas</h3>
+                            <p>Comienza creando tu primera entrada de producto</p>
+                            <a href="/entradas-productos/crear" class="boton">Crear Entrada de Producto</a>
                         </div>
                     </td>
                 </tr>
                 <?php else: ?>
-                    <?php foreach($ventas as $venta): ?>
+                    <?php foreach($entradas as $entrada): ?>
                     <tr>
-                        <td class="id"><?php echo s($venta->id ?? 'N/A'); ?></td>
-                        <td class="fecha"><?php echo s($venta->fecha ?? 'N/A'); ?></td>
-                        <td class="id-cliente"><?php echo s($venta->cliente_nombre ?? 'N/A'); ?></td>
-                        <td class="tipo-pago"><?php echo s($venta->tipo_pago ?? 'N/A'); ?></td>
-                        <td class="credito"><?php echo s($venta->credito ?? 0); ?></td>
-                        <td class="total">$<?php echo number_format($venta->total ?? 0, 2); ?></td>
-                        <td class="id-usuario"><?php echo s($venta->usuario_nombre ?? 'N/A'); ?></td>
+                        <td class="id"><?php echo s($entrada->id ?? 'N/A'); ?></td>
+                        <td class="fecha"><?php echo s($entrada->fecha ?? 'N/A'); ?></td>
+                        <td class="id-usuario"><?php echo s($entrada->usuario_nombre ?? 'N/A'); ?></td>
                         <td class="acciones-tabla">
-                            <a href="/ventas/ver?id=<?php echo $venta->id; ?>" 
-                               class="btn-accion btn-ver" title="Ver detalles">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M1 12S5 4 12 4S23 12 23 12S19 20 12 20S1 12 1 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </a>
-                            <a href="/ventas/editar?id=<?php echo $venta->id; ?>" 
+                            <a href="/entradas-productos/editar?id=<?php echo $entrada->id; ?>" 
                                class="btn-accion btn-editar" title="Editar">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                     <path d="M18.5 2.5C18.8978 2.10218 19.4374 1.87868 20 1.87868C20.5626 1.87868 21.1022 2.10218 21.5 2.5C21.8978 2.89782 22.1213 3.43739 22.1213 4C22.1213 4.56261 21.8978 5.10218 21.5 5.5L12 15L8 16L9 12L18.5 2.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </a>
-                            <button onclick="eliminarVenta(<?php echo $venta->id; ?>, '<?php echo 'Venta #' . $venta->id; ?>')" 
+                            <button onclick="eliminarEntrada(<?php echo $entrada->id; ?>, '<?php echo 'Entrada de producto #' . $entrada->id; ?>')" 
                                     class="btn-accion btn-eliminar" title="Eliminar">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M3 6H5H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -133,7 +117,6 @@
         </table>
     </div>
 </div>
-
 <!-- Modal de confirmación para eliminar -->
 <div id="modal-eliminar" class="modal">
     <div class="modal-contenido">
@@ -142,12 +125,12 @@
             <button class="cerrar-modal" onclick="cerrarModal()">&times;</button>
         </div>
         <div class="modal-body">
-            <p>¿Estás seguro de que deseas eliminar <strong id="nombre-venta"></strong>?</p>
-            <p class="advertencia">Esta acción eliminará la venta y todos sus productos asociados. Esta acción no se puede deshacer.</p>
+            <p>¿Estás seguro de que deseas eliminar <strong id="nombre-entrada"></strong>?</p>
+            <p class="advertencia">Esta acción eliminará la Entrada de Producto y todos sus productos asociados. Esta acción no se puede deshacer.</p>
         </div>
         <div class="modal-footer">
             <button class="boton boton-secundario" onclick="cerrarModal()">Cancelar</button>
-            <form id="form-eliminar" method="POST" action="/ventas/eliminar" style="display: inline;">
+            <form id="form-eliminar" method="POST" action="/entradas-productos/eliminar" style="display: inline;">
                 <input type="hidden" name="id" id="id-venta-eliminar">
                 <button type="submit" class="boton boton-peligro">Eliminar</button>
             </form>

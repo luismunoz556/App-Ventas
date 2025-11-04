@@ -10,10 +10,14 @@ class Entrada extends ActiveRecord {
     public $id;
     public $fecha;
     public $id_usu;
-
+    public $usuario_nombre;
     public function __construct($args = []) {
         $this->id = $args['id'] ?? null;
         $this->fecha = $args['fecha'] ?? '';
         $this->id_usu = $args['id_usu'] ?? '';
+    }
+
+    public function obtenerDetalles() {
+        return EntradaDet::obtenerDetallesConProductos($this->id);
     }
 }

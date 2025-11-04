@@ -7,6 +7,7 @@ use Controller\VentasController;
 use Controller\DatosMaestros;
 use Controller\LoginController;
 use Controller\PaginaPrincipal;
+use Controller\EntradasController;
 
 
 $router = new Router();
@@ -55,11 +56,23 @@ $router->post('/maestros/clientes/editar', [DatosMaestros::class, 'editarCliente
 $router->post('/maestros/clientes/eliminar', [DatosMaestros::class, 'eliminarCliente']);
 $router->get('/maestros/clientes/ver', [DatosMaestros::class, 'verCliente']);
 
-// Pedidos
+// Ventas
 $router->get('/ventas', [VentasController::class, 'ventas']);
 $router->get('/ventas/crear', [VentasController::class, 'crearVenta']);
 $router->post('/ventas/crear', [VentasController::class, 'crearVenta']);
 $router->get('/ventas/ver', [VentasController::class, 'verVenta']);
+$router->get('/ventas/editar', [VentasController::class, 'editarVenta']);
+$router->post('/ventas/editar', [VentasController::class, 'editarVenta']);
+$router->post('/ventas/eliminar', [VentasController::class, 'eliminarVenta']);
+
+//Entradas de Productos
+$router->get('/entradas-productos', [EntradasController::class, 'entradasProductos']);
+$router->get('/entradas-productos/crear', [EntradasController::class, 'crearEntradaProducto']);
+$router->post('/entradas-productos/crear', [EntradasController::class, 'crearEntradaProducto']);
+$router->get('/entradas-productos/editar', [EntradasController::class, 'editarEntradaProducto']);
+$router->post('/entradas-productos/editar', [EntradasController::class, 'editarEntradaProducto']);
+$router->post('/entradas-productos/eliminar', [EntradasController::class, 'eliminarEntradaProducto']);
+
 
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador
 $router->comprobarRutas();

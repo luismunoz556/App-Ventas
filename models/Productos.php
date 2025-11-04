@@ -35,4 +35,12 @@ class Productos extends ActiveRecord {
         
         return self::$alertas;
     }
+
+    public static function actualizaInventario($id,$cantidad,$cantiHis){
+        $nuevaCant = $cantiHis + $cantidad;
+        $query = "UPDATE productos SET cantidad = {$nuevaCant} WHERE id = {$id}";
+        $resultado = self::$db->query($query);
+        return $resultado;
+        
+    }
 }

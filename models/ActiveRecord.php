@@ -198,4 +198,18 @@ class ActiveRecord {
 
     }
 
+    public static function buscaCampoValor($campo,$llave,$valor) {
+        $query = "SELECT ".$campo." FROM " . static::$tabla  ." WHERE ". $llave . " = '{$valor}'";
+        //debuguear($query);
+        $resultado = self::$db->query($query);
+        
+        if($resultado && $resultado->num_rows > 0) {
+            $registro = $resultado->fetch_assoc();
+            $resultado->free();
+            return $registro[$campo] ?? null;
+        }
+        
+        return null;
+    }
+
 }    

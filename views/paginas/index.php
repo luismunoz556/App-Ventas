@@ -25,7 +25,7 @@
             <p>Crear y gestionar nuevas ventas</p>
         </a>
 
-        <a href="/registrar-entrada" class="boton-menu">
+        <a href="/entradas-productos" class="boton-menu">
             <div class="icono-menu">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M3 7V5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V7M3 7L5 21H19L21 7M3 7H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
