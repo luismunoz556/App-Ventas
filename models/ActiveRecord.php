@@ -79,7 +79,12 @@ class ActiveRecord {
         $atributos = $this->atributos();
         $sanitizado = [];
         foreach($atributos as $key => $value ) {
-            $sanitizado[$key] = self::$db->escape_string($value);
+            // Manejar null correctamente - no usar escape_string con null
+            if(is_null($value)) {
+                $sanitizado[$key] = null;
+            } else {
+                $sanitizado[$key] = self::$db->escape_string($value);
+            }
         }
         return $sanitizado;
     }
@@ -141,9 +146,20 @@ class ActiveRecord {
         // Insertar en la base de datos
         $query = " INSERT INTO " . static::$tabla . " ( ";
         $query .= join(', ', array_keys($atributos));
-        $query .= " ) VALUES ('"; 
-        $query .= join("', '", array_values($atributos));
-        $query .= "') ";
+        $query .= " ) VALUES (";
+        
+        // Construir valores manejando NULL correctamente
+        $valores = [];
+        foreach($atributos as $value) {
+            if(is_null($value)) {
+                $valores[] = "NULL";
+            } else {
+                $valores[] = "'" . $value . "'";
+            }
+        }
+        $query .= join(", ", $valores);
+        $query .= ") ";
+        
         // Resultado de la consulta
         $resultado = self::$db->query($query);
         return [
@@ -157,10 +173,14 @@ class ActiveRecord {
         // Sanitizar los datos
         $atributos = $this->sanitizarAtributos();
 
-        // Iterar para ir agregando cada campo de la BD
+        // Iterar para ir agregando cada campo de la BD, manejando NULL correctamente
         $valores = [];
         foreach($atributos as $key => $value) {
-            $valores[] = "{$key}='{$value}'";
+            if(is_null($value)) {
+                $valores[] = "{$key}=NULL";
+            } else {
+                $valores[] = "{$key}='{$value}'";
+            }
         }
 
         // Consulta SQL

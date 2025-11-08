@@ -23,11 +23,42 @@ class Router
         
         // Proteger Rutas...
         session_start();
-
+        $auth = $_SESSION['login'] ?? null;
         // Arreglo de rutas protegidas...
-        // $rutas_protegidas = ['/admin', '/propiedades/crear', '/propiedades/actualizar', '/propiedades/eliminar', '/vendedores/crear', '/vendedores/actualizar', '/vendedores/eliminar'];
+         $rutas_protegidas = [
+            '/principal',
+            '/datos-maestros',
+            '/maestros',
+            '/maestros/productos',
+            '/maestros/productos/ver',
+            '/maestros/productos/crear',
+            '/maestros/productos/editar',
+            '/maestros/productos/eliminar',
+            '/maestros/clientes',
+            '/maestros/clientes/ver',   
+            '/maestros/clientes/crear',
+            '/maestros/clientes/editar',
+            '/maestros/clientes/eliminar',
+            '/ventas',
+            '/ventas/crear',
+            '/ventas/ver',
+            '/ventas/editar',
+            '/ventas/eliminar',
+            '/entradas-productos',
+            '/entradas-productos/crear',
+            '/entradas-productos/ver',
+            '/entradas-productos/editar',
+            '/entradas-productos/eliminar',
+            '/kardex',
+            '/kardex/ver',
+            '/kardex/editar',
+            '/kardex/eliminar',
 
-        // $auth = $_SESSION['login'] ?? null;
+
+
+         ];
+
+         
 
         $currentUrl = strtok($_SERVER['REQUEST_URI'], '?') ?? '/';
         $method = $_SERVER['REQUEST_METHOD'];
@@ -37,6 +68,12 @@ class Router
         } else {
             $fn = $this->postRoutes[$currentUrl] ?? null;
         }
+
+        if(in_array($currentUrl,$rutas_protegidas) && (!$auth ))
+        {
+            header('Location: /');
+        }
+
 
 
         if ( $fn ) {

@@ -87,6 +87,7 @@ class VentasDet extends ActiveRecord {
         $query = "DELETE FROM " . static::$tabla . " WHERE id = " . self::$db->escape_string(intval($idVenta));
         $resultado = self::$db->query($query);
         
+        
         return $resultado;
     }
 }

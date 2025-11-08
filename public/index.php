@@ -8,6 +8,7 @@ use Controller\DatosMaestros;
 use Controller\LoginController;
 use Controller\PaginaPrincipal;
 use Controller\EntradasController;
+use Controller\KardexController;
 
 
 $router = new Router();
@@ -72,6 +73,10 @@ $router->post('/entradas-productos/crear', [EntradasController::class, 'crearEnt
 $router->get('/entradas-productos/editar', [EntradasController::class, 'editarEntradaProducto']);
 $router->post('/entradas-productos/editar', [EntradasController::class, 'editarEntradaProducto']);
 $router->post('/entradas-productos/eliminar', [EntradasController::class, 'eliminarEntradaProducto']);
+
+// Kardex
+$router->get('/kardex', [KardexController::class, 'index']);
+
 
 
 // Comprueba y valida las rutas, que existan y les asigna las funciones del Controlador

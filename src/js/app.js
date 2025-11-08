@@ -70,6 +70,12 @@ function eliminarVenta(id, nombre) {
     document.getElementById('modal-eliminar').style.display = 'flex';
 }
 
+function eliminarEntrada(id, nombre) {
+    document.getElementById('id-entrada-eliminar').value = id;
+    document.getElementById('nombre-entrada').textContent = nombre;
+    document.getElementById('modal-eliminar').style.display = 'flex';
+}
+
 function cerrarModal() {
     document.getElementById('modal-eliminar').style.display = 'none';
 }
@@ -186,6 +192,7 @@ function inicializarFormularioVentas() {
         
         // Guardar el total inicial que viene de PHP (solo la primera vez)
         if (typeof recalcularTotales.totalInicial === 'undefined' && totalInput) {
+            
             recalcularTotales.totalInicial = parseFloat(totalInput.value || '0');
         }
         
@@ -195,6 +202,9 @@ function inicializarFormularioVentas() {
             if (totalInput) totalInput.value = total.toFixed(2);
             if (totalPedido) totalPedido.textContent = '$' + formatearMoneda(total);
             if (cantidadProductos) cantidadProductos.textContent = cantidadTotal;
+            if (tipoPago.value === 'credito'){
+                creditoInput.value = total.toFixed(2);
+            }
         }
     }
     

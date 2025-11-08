@@ -89,7 +89,7 @@
                             </svg>
                             <h3>No hay ventas registradas</h3>
                             <p>Comienza creando tu primera venta</p>
-                            <a href="/pedidos/crear" class="boton">Crear Pedido</a>
+                            <a href="/ventas/crear" class="boton">Crear Venta</a>
                         </div>
                     </td>
                 </tr>

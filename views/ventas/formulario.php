@@ -99,26 +99,33 @@
 
                 <div class="campo">
                     <label for="credito">Crédito</label>
-                    <input 
+                    <div class="input-group-precio">
+                        <span class="prefijo-precio">$</span>
+                        <input 
                         type="number" 
                         id="credito" 
                         name="credito" 
                         min="0" step="0.01"
                         value="<?php echo s($venta->credito ?? 0); ?>"
                         <?php echo ($tipoPagoActual === 'credito') ? '' : 'readonly'; ?>
-                    >
+                        >
+                        
+                    </div>
                 </div>
 
                 <div class="campo">
                     <label for="total">Total</label>
-                    <input 
-                        type="number" 
-                        id="total" 
-                        name="total" 
-                        min="0" step="0.01"
-                        value="<?php echo s($venta->total ?? 0); ?>"
-                        readonly
-                    >
+                    <div class="input-group-precio">
+                        <span class="prefijo-precio">$</span>
+                        <input 
+                            type="number" 
+                            id="total" 
+                            name="total" 
+                            min="0" step="0.01"
+                            value="<?php echo s($venta->total ?? 0); ?>"
+                            readonly
+                        >
+                    </div>
                 </div>
             </div>
 

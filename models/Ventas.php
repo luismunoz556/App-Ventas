@@ -86,8 +86,10 @@ class Ventas extends ActiveRecord {
         $query = "SELECT v.*, c.nombre as cliente_nombre, u.nombre as usuario_nombre 
                   FROM " . static::$tabla . " v 
                   LEFT JOIN cliente c ON v.id_cli = c.id
-                  INNER JOIN USUARIOS U ON V.ID_USU = U.ID";
+                  INNER JOIN usuarios u ON v.id_usu = u.id";
        
         return self::consultarSQL($query);
     }
+
+    
 }   

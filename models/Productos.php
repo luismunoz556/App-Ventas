@@ -5,17 +5,27 @@ namespace Model;
 class Productos extends ActiveRecord {
     // Base de datos
     protected static $tabla = 'productos';
-    protected static $columnasDB = ['id', 'nombre', 'precio', 'cantidad'];
+    protected static $columnasDB = ['id', 'nombre', 'precio', 'cantidad','activo','fecha_creacion','imagen','descripcion','escombo'];
     public $id;
     public $nombre;
     public $precio;
     public $cantidad;
+    public $activo;
+    public $fecha_creacion;
+    public $imagen;
+    public $descripcion;
+    public $escombo;
     
     public function __construct($args = []) {
         $this->id = $args['id'] ?? null;
         $this->nombre = $args['nombre'] ?? '';
         $this->precio = $args['precio'] ?? '';
         $this->cantidad = $args['cantidad'] ?? '';
+        $this->activo = $args['activo'] ?? 0;
+        $this->fecha_creacion = $args['fecha_creacion'] ?? '';
+        $this->imagen = $args['imagen'] ?? '';
+        $this->descripcion = $args['descripcion'] ?? '';
+        $this->escombo = $args['escombo'] ?? 0;
     }
     
     public function validar() {
@@ -42,5 +52,12 @@ class Productos extends ActiveRecord {
         $resultado = self::$db->query($query);
         return $resultado;
         
+    }
+
+    public static function allConCantidad() {
+        $query = "SELECT p.* FROM " . static::$tabla .  " p WHERE p.cantidad > 0";
+        $query .= " union ";
+        $query .= "SELECT r.* FROM " . static::$tabla .  " r WHERE r.escombo = 1";
+        return self::consultarSQL($query);
     }
 }

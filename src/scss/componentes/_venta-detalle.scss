@@ -1,3 +1,5 @@
+@use 'base/mixins' as m;
+
 // Estilos únicos para la vista de detalle de venta
 // Diseño tipo factura/comprobante con colores verdes y azules
 
@@ -9,7 +11,7 @@
     flex-direction: column;
     gap: 2rem;
 
-    @media (max-width: 768px) {
+    @include m.mobile {
         padding: 1rem;
         gap: 1.5rem;
     }
@@ -63,7 +65,7 @@
     position: relative;
     z-index: 2;
 
-    @media (max-width: 768px) {
+    @include m.mobile {
         flex-direction: column;
         gap: 1rem;
     }
@@ -151,7 +153,7 @@
     position: relative;
     z-index: 2;
 
-    @media (max-width: 768px) {
+    @include m.mobile {
         grid-template-columns: 1fr;
         gap: 1.5rem;
     }
@@ -197,7 +199,7 @@
     justify-content: center;
     text-align: right;
 
-    @media (max-width: 768px) {
+    @include m.mobile {
         align-items: flex-start;
         text-align: left;
     }
@@ -218,7 +220,7 @@
         margin-bottom: 0.5rem;
         text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 
-        @media (max-width: 768px) {
+        @include m.mobile {
             font-size: 2.5rem;
         }
     }
@@ -390,7 +392,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
 
-    @media (max-width: 768px) {
+    @include m.mobile {
         grid-template-columns: 1fr;
     }
 }
@@ -571,7 +573,7 @@
 }
 
 // Responsive
-@media (max-width: 768px) {
+@include m.mobile {
     .venta-header {
         padding: 1.5rem;
     }

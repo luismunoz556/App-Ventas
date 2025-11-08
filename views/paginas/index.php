@@ -45,6 +45,17 @@
             <h3>Validar Ventas</h3>
             <p>Revisar y validar transacciones de venta</p>
         </a>
+
+        <a href="/kardex" class="boton-menu">
+            <div class="icono-menu">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M9 3V21M15 3V21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <h3>Kardex</h3>
+            <p>Consultar movimientos de inventario</p>
+        </a>
     </div>
 </div>
 

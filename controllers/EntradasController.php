@@ -10,7 +10,7 @@ use Model\Kardex;
 
 class EntradasController {
     public static function entradasProductos(Router $router) {
-        $entradas = Entrada::all();
+        $entradas = Entrada::allConUsuario();
         $router->render('entradas/index', [
             'entradas' => $entradas
         ]);
@@ -68,7 +68,6 @@ class EntradasController {
                 
                // debuguear($idEntrada);    
                 $detallesGuardados = 0;
-                    
                 foreach($detalles as $detalle){
                     $cantidadHist = 0;
                     
@@ -78,10 +77,8 @@ class EntradasController {
                     $cantidadHist = intval(Productos::buscaCampoValor('cantidad','id',$detalle['id_prod']));
                     $entradaDet->cantidad = floatval($detalle['cantidad']);
                     $resultadoDet = $entradaDet->guardar();
-                    
                     if($resultadoDet['resultado']){
-                        $inserPro = Kardex::insertarKardex($entradaDet->id_prod,$entradaDet->cantidad,'entrada',$cantidadHist);
-                        
+                        $inserPro = Kardex::insertarKardex($entradaDet->id_prod,$entradaDet->cantidad,'entrada',$cantidadHist,null,$idEntrada);
                         $actInv = Productos::actualizaInventario($entradaDet->id_prod,$entradaDet->cantidad,$cantidadHist);
                        
                         if($actInv && $inserPro){
@@ -188,7 +185,7 @@ class EntradasController {
                         if(!isset($mapaNuevos[$idProd])) {
                             // Producto eliminado - revertir la entrada
                             $cantidadHist = intval(Productos::buscaCampoValor('cantidad','id',$idProd));
-                            $inserPro = Kardex::insertarKardex($idProd, $cantidadAntigua * -1, 'reversoEntrada',$cantidadHist);
+                            $inserPro = Kardex::insertarKardex($idProd, $cantidadAntigua * -1, 'reversoEntrada',$cantidadHist,null,$entrada->id);
                             $actInv = Productos::actualizaInventario($idProd, $cantidadAntigua * -1, $cantidadHist);
                             
                             if($inserPro['resultado'] && $actInv) {
@@ -207,7 +204,7 @@ class EntradasController {
                             if($diferencia != 0) {
                                 $cantidadHist = intval(Productos::buscaCampoValor('cantidad','id',$idProd));
                                 // La diferencia positiva porque es una entrada
-                                $inserPro = Kardex::insertarKardex($idProd, $diferencia, 'ajusteEntrada',$cantidadHist);
+                                $inserPro = Kardex::insertarKardex($idProd, $diferencia, 'ajusteEntrada',$cantidadHist,null,$entrada->id);
                                 $actInv = Productos::actualizaInventario($idProd, $diferencia, $cantidadHist);
                                 
                                 if($inserPro['resultado'] && $actInv) {
@@ -222,7 +219,7 @@ class EntradasController {
                         if(!isset($mapaAntiguos[$idProd])) {
                             // Producto nuevo - registrar entrada
                             $cantidadHist = intval(Productos::buscaCampoValor('cantidad','id',$idProd));
-                            $inserPro = Kardex::insertarKardex($idProd, $cantidadNueva, 'entrada',$cantidadHist);
+                            $inserPro = Kardex::insertarKardex($idProd, $cantidadNueva, 'entrada',$cantidadHist,null,$entrada->id);
                             $actInv = Productos::actualizaInventario($idProd, $cantidadNueva, $cantidadHist);
                             
                             if($inserPro['resultado'] && $actInv) {
@@ -276,6 +273,46 @@ class EntradasController {
 
         ]);
 
+    }
+
+    public static function eliminarEntradaProducto(Router $router) {
+        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'] ?? null;
+            
+            if(!$id) {
+                header('Location: /entradas-productos?error=1');
+                return;
+            }
+            
+            $entrada = Entrada::find($id);
+            
+            if(!$entrada) {
+                header('Location: /entradas-productos?error=1');
+                return;
+            }
+            
+            // Primero revertir movimientos en Kardex (obtiene detalles antes de eliminar)
+            Kardex::eliminarPorEntrada($entrada->id);
+            
+            // Luego eliminar los detalles de la entrada
+            EntradaDet::eliminarPorEntrada($entrada->id);
+            
+            // Finalmente eliminar la entrada (encabezado)
+            $resultado = $entrada->eliminar();
+            
+            if($resultado) {
+                header('Location: /entradas-productos?eliminado=1');
+                return;
+            } else {
+                header('Location: /entradas-productos?error=1');
+                return;
+            }
+        }
+        
+        // Si no es POST, redirigir a la lista
+        header('Location: /entradas-productos');
+        return;
+ 
     }
 
 

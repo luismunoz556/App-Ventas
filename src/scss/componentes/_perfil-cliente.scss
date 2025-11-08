@@ -1,3 +1,5 @@
+@use 'base/mixins' as m;
+
 // Estilos para la pantalla de perfil de cliente
 .contenedor-perfil-cliente {
     max-width: 1200px;
@@ -220,7 +222,7 @@
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
 
-    @media (max-width: 768px) {
+    @include m.mobile {
         grid-template-columns: 1fr;
     }
 }
@@ -441,7 +443,7 @@
 }
 
 // Responsive
-@media (max-width: 768px) {
+@include m.mobile {
     .contenedor-perfil-cliente {
         padding: 1rem;
     }

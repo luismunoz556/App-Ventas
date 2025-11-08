@@ -20,4 +20,11 @@ class Entrada extends ActiveRecord {
     public function obtenerDetalles() {
         return EntradaDet::obtenerDetallesConProductos($this->id);
     }
+
+    public static function allConUsuario() {
+        $query = "SELECT e.*, u.nombre as usuario_nombre 
+                  FROM " . static::$tabla . " e 
+                  INNER JOIN usuarios u ON e.id_usu = u.id";
+        return self::consultarSQL($query);
+    }
 }

@@ -43,7 +43,7 @@ class Email {
             $email->isHTML(true);
             $contenido = '<Html><p><strong>Hola ' . $this->nombre . '</strong></p>';
             $contenido .= '<p>Para confirmar tu cuenta, haz clic en el siguiente enlace:</p>';
-            $contenido .= "<a href='".$_ENV['APP_URLD']."/confirmar-cuenta?token= ". $this->token ."'>Confirmar Cuenta</a> ";
+            $contenido .= "<a href='".$_ENV['APP_URLD']."/confirmar-cuenta?token=". $this->token ."'>Confirmar Cuenta</a> ";
             $contenido .= '<p>Si no solicitaste este cambio, ignora este mensaje</p>';
             $contenido .= '<p>Si tienes alguna pregunta, responde a este mensaje</p>';
             $contenido .= '</Html>';

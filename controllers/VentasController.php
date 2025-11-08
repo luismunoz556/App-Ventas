@@ -8,8 +8,72 @@ use Model\VentasDet;
 use Model\Cliente;
 use Model\Productos;
 use Model\Kardex;
+use Model\ComboDet;
 
 class VentasController {
+    /**
+     * Procesa los componentes de un combo en una venta
+     * @param int $idCombo ID del combo
+     * @param float $cantidadCombo Cantidad del combo vendida
+     * @param string $tipoMovimiento Tipo de movimiento para kardex ('venta_combo', 'reversoVenta', 'ajusteVenta')
+     * @param int $idVenta ID de la venta
+     * @return int Número de componentes procesados exitosamente
+     */
+    private static function procesarComponentesCombo($idCombo, $cantidadCombo, $tipoMovimiento, $idVenta) {
+        $producto = Productos::find($idCombo);
+        $esCombo = $producto && (!empty($producto->escombo) && $producto->escombo == 1);
+        
+        if(!$esCombo) {
+            return 0;
+        }
+        
+        $componentes = ComboDet::obtenerComponentes($idCombo);
+        $procesados = 0;
+        
+        if(!empty($componentes)) {
+            foreach($componentes as $componente) {
+                $idComponente = intval($componente['id_producto']);
+                $cantidadComponente = floatval($componente['cantidad']);
+                
+                // Calcular cantidad total: cantidad_componente * cantidad_combo
+                $cantidadADescontar = $cantidadComponente * $cantidadCombo;
+                
+                // Determinar el signo según el tipo de movimiento
+                // reversoVenta: positivo (aumentar inventario)
+                // venta_combo, ajusteVenta: negativo (descontar inventario)
+                $cantidadMovimiento = ($tipoMovimiento === 'reversoVenta') 
+                    ? $cantidadADescontar 
+                    : $cantidadADescontar * -1;
+                
+                // Obtener cantidad actual del componente
+                $cantidadHist = intval(Productos::buscaCampoValor('cantidad', 'id', $idComponente));
+                
+                // Registrar en kardex para el componente
+                $inserPro = Kardex::insertarKardex(
+                    $idComponente,
+                    $cantidadMovimiento,
+                    $tipoMovimiento,
+                    $cantidadHist,
+                    $idVenta,
+                    null
+                );
+                
+                // Descontar/aumentar inventario del componente
+                $actInv = Productos::actualizaInventario(
+                    $idComponente,
+                    $cantidadMovimiento,
+                    $cantidadHist
+                );
+                
+                if($inserPro['resultado'] && $actInv) {
+                    $procesados++;
+                }
+            }
+        }
+        
+        return $procesados;
+    }
+    
     public static function ventas(Router $router) {
         $ventas = Ventas::allConCliente();
         //debuguear($ventas);
@@ -25,7 +89,7 @@ class VentasController {
         
         // Obtener clientes y productos para el formulario
         $clientes = Cliente::all();
-        $productos = Productos::all();
+        $productos = Productos::allConCantidad();
         
         // Si es POST, procesar el formulario
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -86,22 +150,75 @@ class VentasController {
                     
                     foreach($detalles as $detalle) {
                         $ventaDet = new VentasDet();
+                        $idProducto = intval($detalle['id_prod']);
+                        $cantidadVenta = floatval($detalle['cantidad']);
                         
                         // Establecer el id de la venta como FK (el campo id en ventas_det es el FK a ventas)
                         $ventaDet->id = $idVenta;
-                        $ventaDet->id_prod = intval($detalle['id_prod']);
-                        $ventaDet->cantidad = floatval($detalle['cantidad']);
+                        $ventaDet->id_prod = $idProducto;
+                        $ventaDet->cantidad = $cantidadVenta;
                         $ventaDet->precio = floatval($detalle['precio']);
-                        $cantidadHist = intval(Productos::buscaCampoValor('cantidad','id',$detalle['id_prod']));
-                    
-                        // Guardar el detalle usando el método guardar()
-                        // El modelo VentasDet tiene sobrescrito guardar() para crear cuando id es FK
+                        
+                        // Verificar si el producto es un combo
+                        $producto = Productos::find($idProducto);
+                        $esCombo = $producto && (!empty($producto->escombo) && $producto->escombo == 1);
+                        
+                        // Guardar el detalle de venta (siempre guarda el combo/producto que se vendió)
                         $resultadoDet = $ventaDet->guardar();
-                        $inserPro = Kardex::insertarKardex($ventaDet->id_prod,$ventaDet->cantidad*-1,'venta',$cantidadHist);
-                        $actInv = Productos::actualizaInventario($ventaDet->id_prod,$ventaDet->cantidad*-1,$cantidadHist);
-
-                        if($resultadoDet['resultado'] && $inserPro['resultado']) {
+                        
+                        if($resultadoDet['resultado']) {
                             $detallesGuardados++;
+                            
+                            // Si es combo, procesar componentes
+                            if($esCombo) {
+                                $componentes = ComboDet::obtenerComponentes($idProducto);
+                                
+                                if(!empty($componentes)) {
+                                    foreach($componentes as $componente) {
+                                        $idComponente = intval($componente['id_producto']);
+                                        $cantidadComponente = floatval($componente['cantidad']);
+                                        
+                                        // Calcular cantidad total a descontar: cantidad_componente * cantidad_combo_vendido
+                                        $cantidadADescontar = $cantidadComponente * $cantidadVenta;
+                                        
+                                        // Obtener cantidad actual del componente
+                                        $cantidadHist = intval(Productos::buscaCampoValor('cantidad', 'id', $idComponente));
+                                        
+                                        // Registrar en kardex para el componente
+                                        $inserPro = Kardex::insertarKardex(
+                                            $idComponente,
+                                            $cantidadADescontar * -1,
+                                            'venta_combo',
+                                            $cantidadHist,
+                                            $idVenta,
+                                            null
+                                        );
+                                        
+                                        // Descontar inventario del componente
+                                        $actInv = Productos::actualizaInventario(
+                                            $idComponente,
+                                            $cantidadADescontar * -1,
+                                            $cantidadHist
+                                        );
+                                    }
+                                }
+                            } else {
+                                // Si no es combo, procesar normalmente
+                                $cantidadHist = intval(Productos::buscaCampoValor('cantidad', 'id', $idProducto));
+                                $inserPro = Kardex::insertarKardex(
+                                    $ventaDet->id_prod,
+                                    $ventaDet->cantidad * -1,
+                                    'venta',
+                                    $cantidadHist,
+                                    $idVenta,
+                                    null
+                                );
+                                $actInv = Productos::actualizaInventario(
+                                    $ventaDet->id_prod,
+                                    $ventaDet->cantidad * -1,
+                                    $cantidadHist
+                                );
+                            }
                         }
                     }
                     
@@ -242,9 +359,18 @@ class VentasController {
                     // 1. Productos eliminados: revertir movimiento (cantidad positiva porque era negativa)
                     foreach($mapaAntiguos as $idProd => $cantidadAntigua) {
                         if(!isset($mapaNuevos[$idProd])) {
+                            // Verificar si es combo para revertir componentes
+                            $producto = Productos::find($idProd);
+                            $esCombo = $producto && (!empty($producto->escombo) && $producto->escombo == 1);
+                            
+                            if($esCombo) {
+                                // Revertir componentes del combo (cantidad positiva para revertir)
+                                self::procesarComponentesCombo($idProd, $cantidadAntigua, 'reversoVenta', $venta->id);
+                            }
+                            
                             // Producto eliminado - revertir la salida
                             $cantidadHist = intval(Productos::buscaCampoValor('cantidad','id',$idProd));
-                            $inserPro = Kardex::insertarKardex($idProd, $cantidadAntigua, 'reversoVenta',$cantidadHist);
+                            $inserPro = Kardex::insertarKardex($idProd, $cantidadAntigua, 'reversoVenta',$cantidadHist,$venta->id,null);
                             $actInv = Productos::actualizaInventario($idProd, $cantidadAntigua, $cantidadHist);
                             
                             if($inserPro['resultado'] && $actInv) {
@@ -261,9 +387,24 @@ class VentasController {
                             
                             // Solo registrar si hay diferencia
                             if($diferencia != 0) {
+                                // Verificar si es combo para ajustar componentes
+                                $producto = Productos::find($idProd);
+                                $esCombo = $producto && (!empty($producto->escombo) && $producto->escombo == 1);
+                                
+                                if($esCombo) {
+                                    // Ajustar componentes del combo según la diferencia
+                                    // Si diferencia > 0: se vendieron más combos, descontar más componentes
+                                    // Si diferencia < 0: se vendieron menos combos, revertir componentes
+                                    if($diferencia > 0) {
+                                        self::procesarComponentesCombo($idProd, $diferencia, 'ajusteVenta', $venta->id);
+                                    } else {
+                                        self::procesarComponentesCombo($idProd, abs($diferencia), 'reversoVenta', $venta->id);
+                                    }
+                                }
+                                
                                 $cantidadHist = intval(Productos::buscaCampoValor('cantidad','id',$idProd));
                                 // La diferencia negativa porque es una venta
-                                $inserPro = Kardex::insertarKardex($idProd, $diference * -1, 'ajusteVenta',$cantidadHist);
+                                $inserPro = Kardex::insertarKardex($idProd, $diferencia * -1, 'ajusteVenta',$cantidadHist,$venta->id,null);
                                 $actInv = Productos::actualizaInventario($idProd, $diferencia * -1, $cantidadHist);
                                 
                                 if($inserPro['resultado'] && $actInv) {
@@ -276,9 +417,18 @@ class VentasController {
                     // 3. Productos nuevos: registrar como venta (cantidad negativa)
                     foreach($mapaNuevos as $idProd => $cantidadNueva) {
                         if(!isset($mapaAntiguos[$idProd])) {
+                            // Verificar si es combo para procesar componentes
+                            $producto = Productos::find($idProd);
+                            $esCombo = $producto && (!empty($producto->escombo) && $producto->escombo == 1);
+                            
+                            if($esCombo) {
+                                // Procesar componentes del combo
+                                self::procesarComponentesCombo($idProd, $cantidadNueva, 'venta_combo', $venta->id);
+                            }
+                            
                             // Producto nuevo - registrar venta
                             $cantidadHist = intval(Productos::buscaCampoValor('cantidad','id',$idProd));
-                            $inserPro = Kardex::insertarKardex($idProd, $cantidadNueva * -1, 'venta',$cantidadHist);
+                            $inserPro = Kardex::insertarKardex($idProd, $cantidadNueva * -1, 'venta',$cantidadHist,$venta->id,null);
                             $actInv = Productos::actualizaInventario($idProd, $cantidadNueva * -1, $cantidadHist);
                             
                             if($inserPro['resultado'] && $actInv) {
@@ -350,10 +500,31 @@ class VentasController {
                 return;
             }
             
-            // Primero eliminar los detalles de la venta
+            // Obtener detalles de la venta antes de eliminarlos
+            $detalles = $venta->obtenerDetalles();
+            
+            // Revertir componentes de combos antes de eliminar
+            foreach($detalles as $detalle) {
+                $idProducto = intval($detalle['id_prod']);
+                $cantidadVenta = floatval($detalle['cantidad']);
+                
+                // Verificar si es combo
+                $producto = Productos::find($idProducto);
+                $esCombo = $producto && (!empty($producto->escombo) && $producto->escombo == 1);
+                
+                if($esCombo) {
+                    // Revertir componentes del combo
+                    self::procesarComponentesCombo($idProducto, $cantidadVenta, 'reversoVenta', $venta->id);
+                }
+            }
+            
+            // Primero revertir movimientos en Kardex (obtiene detalles antes de eliminar)
+            Kardex::eliminarPorVenta($venta->id);
+            
+            // Luego eliminar los detalles de la venta
             VentasDet::eliminarPorVenta($venta->id);
             
-            // Luego eliminar la venta (encabezado)
+            // Finalmente eliminar la venta (encabezado)
             $resultado = $venta->eliminar();
             
             if($resultado) {
